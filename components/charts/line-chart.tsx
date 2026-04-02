@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from 'recharts'
-import { formatDateShort } from '@/lib/utils/formatting'
+import { formatDateShort } from '../../lib/utils/formatting'
 
 interface PerformanceLineChartProps {
   data: Array<{ date: string; value: number }>

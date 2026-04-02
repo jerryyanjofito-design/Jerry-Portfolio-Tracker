@@ -1,5 +1,5 @@
 import { HTMLAttributes, forwardRef } from 'react'
-import { cn } from '@/lib/utils/cn'
+import { cn } from '../../lib/utils/cn'
 
 export interface BadgeProps extends HTMLAttributes<HTMLDivElement> {
   variant?: 'default' | 'secondary' | 'success' | 'warning' | 'danger'

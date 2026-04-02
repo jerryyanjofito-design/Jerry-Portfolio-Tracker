@@ -8,7 +8,7 @@ import {
   Tooltip,
   Legend,
 } from 'recharts'
-import type { AssetAllocationItem } from '@/lib/supabase/types'
+import type { AssetAllocationItem } from '../../lib/supabase/types'
 
 interface AllocationPieChartProps {
   data: AssetAllocationItem[]
