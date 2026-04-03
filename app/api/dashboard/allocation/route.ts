@@ -25,7 +25,6 @@ export async function GET(request: NextRequest) {
           .filter((c): c is string => c !== null && c !== 'IDR')
       ),
       ...new Set(cashAccounts.map(a => a.currency).filter(c => c !== 'IDR'))
-    )
     ]
 
     for (const currency of currencies) {
