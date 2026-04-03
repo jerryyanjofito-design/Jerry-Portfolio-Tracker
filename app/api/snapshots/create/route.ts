@@ -5,7 +5,7 @@ import {
   createSnapshot,
   getSnapshotByDate,
 } from '@/lib/supabase/client'
-import { getFXRate } from '@/lib/supabase/client'
+import { getFXRate } from '@/lib/utils/currency'
 import { calculatePortfolioMetrics } from '@/lib/utils/calculations'
 
 /**
@@ -37,12 +37,12 @@ export async function POST(request: NextRequest) {
     const fxRates: Record<string, number> = {}
 
     const currencies = [
-      ...new Set(
+      ...Array.from(new Set(
         holdings
           .map(h => h.price_currency)
           .filter((c): c is string => c !== null && c !== 'IDR')
-      ),
-      ...new Set(cashAccounts.map(a => a.currency).filter(c => c !== 'IDR'))
+      )),
+      ...Array.from(new Set(cashAccounts.map(a => a.currency).filter(c => c !== 'IDR')))
     ]
     currencies.push('IDR')
 

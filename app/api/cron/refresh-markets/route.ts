@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     const assets = await getAssets()
 
     // Extract unique tickers
-    const tickers = [...new Set(assets.map(a => a.ticker))]
+    const tickers = Array.from(new Set(assets.map(a => a.ticker)))
 
     // Refresh market data
     const refreshed = await refreshMarketData(tickers)

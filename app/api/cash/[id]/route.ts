@@ -3,8 +3,8 @@ import {
   getCashAccountById,
   updateCashAccount,
   deleteCashAccount,
-  getFXRate,
 } from '@/lib/supabase/client'
+import { getFXRate } from '@/lib/utils/currency'
 import { updateCashAccountSchema } from '@/lib/utils/validation'
 
 /**

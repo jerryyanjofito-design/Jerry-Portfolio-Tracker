@@ -1,8 +1,48 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getDailyAnalysis } from '@/lib/api/ai'
 import { getAssetHoldings, getCashAccounts, getLatestSnapshot } from '@/lib/supabase/client'
-import { getFXRate } from '@/lib/supabase/client'
+import { getFXRate } from '@/lib/utils/currency'
 import { calculatePortfolioMetrics, getTopPerformers, getWorstPerformers } from '@/lib/utils/calculations'
+
+// Type for asset holdings with currency info
+interface AssetHolding {
+  id: string
+  ticker: string
+  name: string | null
+  security_type: string
+  shares: number
+  purchase_price: number
+  current_price: number | null
+  current_value: number | null
+  cost_basis: number
+  return_percentage: number
+  gain_loss: number
+  currency: string
+  price_currency: string | null
+  updated_at: string
+}
+
+// Type for cash accounts
+interface CashAccount {
+  id: string
+  account_name: string
+  currency: string
+  balance: number
+  created_at: string
+  updated_at: string
+}
+
+// Type for snapshot
+interface Snapshot {
+  id: string
+  date: string
+  total_net_worth: number
+  total_assets_value: number
+  total_cash_value: number
+  assets_breakdown: Record<string, number>
+  cash_breakdown: Record<string, number>
+  created_at: string
+}
 
 /**
  * GET /api/ai/daily-analysis
@@ -14,19 +54,19 @@ export async function GET(request: NextRequest) {
     const forceRefresh = searchParams.get('force_refresh') === 'true'
 
     // Get portfolio data
-    const holdings = await getAssetHoldings()
-    const cashAccounts = await getCashAccounts()
+    const holdings = (await getAssetHoldings()) as AssetHolding[]
+    const cashAccounts = (await getCashAccounts()) as CashAccount[]
 
     // Get FX rates
     const fxRates: Record<string, number> = {}
 
     const currencies = [
-      ...new Set(
+      ...Array.from(new Set(
         holdings
           .map(h => h.price_currency)
           .filter((c): c is string => c !== null && c !== 'IDR')
-      ),
-      ...new Set(cashAccounts.map(a => a.currency).filter(c => c !== 'IDR'))
+      )),
+      ...Array.from(new Set(cashAccounts.map(a => a.currency).filter(c => c !== 'IDR')))
     ]
     currencies.push('IDR')
 
@@ -50,7 +90,7 @@ export async function GET(request: NextRequest) {
     )
 
     // Get latest snapshot for daily change
-    const latestSnapshot = await getLatestSnapshot()
+    const latestSnapshot = (await getLatestSnapshot()) as Snapshot | null
     let dailyChange = 0
     let dailyChangePercentage = 0
 
@@ -80,15 +120,15 @@ export async function GET(request: NextRequest) {
       },
       topPerformers: topPerformers.map(p => ({
         ticker: p.ticker,
-        name: p.name,
+        name: p.name || 'Unknown',
         returnPercentage: p.return_percentage,
       })),
       worstPerformers: worstPerformers.map(p => ({
         ticker: p.ticker,
-        name: p.name,
+        name: p.name || 'Unknown',
         returnPercentage: p.return_percentage,
       })),
-      allocation: portfolioMetrics.allocation,
+      allocation: portfolioMetrics.allocation as unknown as Record<string, number>,
       date: new Date().toISOString(),
     }
 

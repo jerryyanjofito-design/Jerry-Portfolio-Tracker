@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import {
   getCashAccounts,
   createCashAccount,
-  getFXRate,
 } from '@/lib/supabase/client'
+import { getFXRate } from '@/lib/utils/currency'
 import { cashAccountSchema } from '@/lib/utils/validation'
 
 /**
@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     const fxRates: Record<string, number> = {}
 
     // Collect unique currencies (excluding IDR)
-    const currencies = [...new Set(accounts.map(a => a.currency).filter(c => c !== 'IDR'))]
+    const currencies = Array.from(new Set(accounts.map(a => a.currency).filter(c => c !== 'IDR')))
 
     // Fetch FX rates
     for (const currency of currencies) {

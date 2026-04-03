@@ -8,6 +8,21 @@ import {
 import { getMarketPrice } from '@/lib/api/market-data'
 import { updateAssetSchema } from '@/lib/utils/validation'
 
+// Type for asset
+interface Asset {
+  id: string
+  ticker: string
+  name: string | null
+  security_type: string
+  shares: number
+  purchase_price: number
+  currency: string
+  country: string | null
+  exchange: string | null
+  created_at: string
+  updated_at: string
+}
+
 /**
  * GET /api/assets/:id
  * Get a single asset
@@ -17,7 +32,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const asset = await getAssetById(params.id)
+    const asset = (await getAssetById(params.id)) as Asset | null
 
     if (!asset) {
       return NextResponse.json(

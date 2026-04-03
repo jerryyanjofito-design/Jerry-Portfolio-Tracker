@@ -5,7 +5,7 @@ import {
   getCashAccounts,
   getLatestSnapshot,
 } from '@/lib/supabase/client'
-import { getFXRate } from '@/lib/supabase/client'
+import { getFXRate } from '@/lib/utils/currency'
 import { calculatePortfolioMetrics, calculateGoalProgress, calculateDailyChange } from '@/lib/utils/calculations'
 import { getTopPerformers, getWorstPerformers } from '@/lib/utils/calculations'
 
@@ -26,12 +26,12 @@ export async function GET(request: NextRequest) {
 
     // Collect unique currencies from holdings
     const currencies = [
-      ...new Set(
+      ...Array.from(new Set(
         holdings
           .map(h => h.price_currency)
           .filter((c): c is string => c !== null && c !== 'IDR')
-      ),
-      ...new Set(cashAccounts.map(a => a.currency).filter(c => c !== 'IDR'))
+      )),
+      ...Array.from(new Set(cashAccounts.map(a => a.currency).filter(c => c !== 'IDR')))
     ]
 
     // Fetch FX rates

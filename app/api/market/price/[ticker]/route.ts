@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getMarketPrice, getMarketPrice as getMarketPriceFromService } from '@/lib/api/market-data'
-import { getFXRate } from '@/lib/supabase/client'
+import { getFXRate } from '@/lib/utils/currency'
 
 /**
  * GET /api/market/price/:ticker
