@@ -10,6 +10,24 @@ import { getFXRate } from '@/lib/utils/currency'
 import { assetSchema } from '@/lib/utils/validation'
 import { calculateAssetValue } from '@/lib/utils/calculations'
 
+// Type for asset holdings with currency info
+interface AssetHolding {
+  id: string
+  ticker: string
+  name: string | null
+  security_type: string
+  shares: number
+  purchase_price: number
+  current_price: number | null
+  current_value: number | null
+  cost_basis: number
+  return_percentage: number
+  gain_loss: number
+  currency: string
+  price_currency: string | null
+  updated_at: string
+}
+
 /**
  * GET /api/assets
  * List all assets with optional filtering and sorting
@@ -29,7 +47,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get holdings with current prices
-    const holdings = await getAssetHoldings()
+    const holdings = (await getAssetHoldings()) as AssetHolding[]
 
     // Filter by type if specified
     let filteredHoldings = holdings

@@ -7,6 +7,16 @@ import {
 import { getFXRate } from '@/lib/utils/currency'
 import { updateCashAccountSchema } from '@/lib/utils/validation'
 
+// Type for cash account
+interface CashAccount {
+  id: string
+  account_name: string
+  currency: string
+  balance: number
+  created_at: string
+  updated_at: string
+}
+
 /**
  * GET /api/cash/:id
  * Get a single cash account
@@ -16,7 +26,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const account = await getCashAccountById(params.id)
+    const account = (await getCashAccountById(params.id)) as CashAccount | null
 
     if (!account) {
       return NextResponse.json(

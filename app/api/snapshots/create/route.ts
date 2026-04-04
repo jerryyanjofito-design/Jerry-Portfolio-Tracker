@@ -8,6 +8,24 @@ import {
 import { getFXRate } from '@/lib/utils/currency'
 import { calculatePortfolioMetrics } from '@/lib/utils/calculations'
 
+// Type for asset holdings with currency info
+interface AssetHolding {
+  id: string
+  ticker: string
+  name: string | null
+  security_type: string
+  shares: number
+  purchase_price: number
+  current_price: number | null
+  current_value: number | null
+  cost_basis: number
+  return_percentage: number
+  gain_loss: number
+  currency: string
+  price_currency: string | null
+  updated_at: string
+}
+
 /**
  * POST /api/snapshots/create
  * Create a daily snapshot
@@ -30,7 +48,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get current portfolio data
-    const holdings = await getAssetHoldings()
+    const holdings = (await getAssetHoldings()) as AssetHolding[]
     const cashAccounts = await getCashAccounts()
 
     // Get FX rates

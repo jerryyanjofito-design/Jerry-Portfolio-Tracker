@@ -5,6 +5,43 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getAssets, getCashAccounts, createSnapshot } from '@/lib/supabase/client'
 
+// Type for asset
+interface Asset {
+  id: string
+  ticker: string
+  name: string | null
+  security_type: string
+  shares: number
+  purchase_price: number
+  currency: string
+  country: string | null
+  exchange: string | null
+  created_at: string
+  updated_at: string
+}
+
+// Type for cash account
+interface CashAccount {
+  id: string
+  account_name: string
+  currency: string
+  balance: number
+  created_at: string
+  updated_at: string
+}
+
+// Type for snapshot
+interface Snapshot {
+  id: string
+  date: string
+  total_net_worth: number
+  total_assets_value: number
+  total_cash_value: number
+  assets_breakdown: Record<string, number>
+  cash_breakdown: Record<string, number>
+  created_at: string
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -17,12 +54,9 @@ export async function POST(request: NextRequest) {
       return yesterday.toISOString().split('T')[0]
     })()
 
-    // Check if snapshot already exists
-    // Note: Skipping this check since cron jobs are disabled
-
     // Get current portfolio data
-    const assets = await getAssets()
-    const cashAccounts = await getCashAccounts()
+    const assets = (await getAssets()) as Asset[]
+    const cashAccounts = (await getCashAccounts()) as CashAccount[]
 
     // Simple calculation (without market data to keep this fast)
     const totalAssetsValue = assets.reduce((sum, a) => sum + (a.shares * a.purchase_price), 0)
@@ -46,20 +80,24 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const cashBreakdown = cashAccounts.reduce((acc, obj) => {
-      obj[acc.currency] = (obj[acc.currency] || 'IDR')
-      return obj[acc.currency] += Number(acc.balance)
-    }, {})
+    // Calculate cash breakdown
+    const cashBreakdown: Record<string, number> = {}
+    for (const account of cashAccounts) {
+      const currency = account.currency
+      const currentValue = cashBreakdown[currency] || 'IDR'
+      const newBalance = (typeof currentValue === 'number' ? currentValue : 0)
+      cashBreakdown[currency] = newBalance + Number(account.balance)
+    }
 
     // Create snapshot
-    const snapshot = await createSnapshot({
+    const snapshot = (await createSnapshot({
       date: snapshotDate,
-      total_net_worth,
+      total_net_worth: totalNetWorth,
       total_assets_value: totalAssetsValue,
       total_cash_value: totalCashValue,
       assets_breakdown: assetsBreakdown,
       cash_breakdown: cashBreakdown,
-    })
+    })) as Snapshot
 
     if (!snapshot) {
       throw new Error('Failed to create snapshot')
@@ -69,7 +107,7 @@ export async function POST(request: NextRequest) {
       success: true,
       snapshot_id: snapshot.id,
       totals: {
-        total_net_worth,
+        total_net_worth: totalNetWorth,
         total_assets_value: totalAssetsValue,
         total_cash_value: totalCashValue,
       },

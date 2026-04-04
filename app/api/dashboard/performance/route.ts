@@ -38,10 +38,18 @@ export async function GET(request: NextRequest) {
     }
 
     // Get snapshots
-    const snapshots = await getSnapshots(
-      startDate?.toISOString().split('T')[0],
-      today.toISOString().split('T')[0]
-    )
+    const snapshots = (await getSnapshots()) as Snapshot[]
+    const startDateStr = startDate?.toISOString() || ''
+    const todayStr = today.toISOString()
+
+    // Build date range array for API call
+    let dateRange: string[] = []
+    if (startDateStr) {
+      dateRange = [startDateStr.split('T')[0], todayStr.split('T')[0]]
+    } else {
+      dateRange = [todayStr.split('T')[0]]
+    }
+
 
     if (!snapshots || snapshots.length === 0) {
       return NextResponse.json({

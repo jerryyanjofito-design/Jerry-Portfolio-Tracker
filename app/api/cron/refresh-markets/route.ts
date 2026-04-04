@@ -2,6 +2,21 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getAssets } from '@/lib/supabase/client'
 import { refreshMarketData } from '@/lib/api/market-data'
 
+// Type for asset
+interface Asset {
+  id: string
+  ticker: string
+  name: string | null
+  security_type: string
+  shares: number
+  purchase_price: number
+  currency: string
+  country: string | null
+  exchange: string | null
+  created_at: string
+  updated_at: string
+}
+
 /**
  * POST /api/cron/refresh-markets?secret=CRON_SECRET
  * Scheduled job to refresh market data
@@ -20,7 +35,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get all assets
-    const assets = await getAssets()
+    const assets = (await getAssets()) as Asset[]
 
     // Extract unique tickers
     const tickers = Array.from(new Set(assets.map(a => a.ticker)))

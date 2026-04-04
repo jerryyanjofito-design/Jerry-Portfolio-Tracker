@@ -6,13 +6,23 @@ import {
 import { getFXRate } from '@/lib/utils/currency'
 import { cashAccountSchema } from '@/lib/utils/validation'
 
+// Type for cash account
+interface CashAccount {
+  id: string
+  account_name: string
+  currency: string
+  balance: number
+  created_at: string
+  updated_at: string
+}
+
 /**
  * GET /api/cash
  * List all cash accounts with currency conversions
  */
 export async function GET(request: NextRequest) {
   try {
-    const accounts = await getCashAccounts()
+    const accounts = (await getCashAccounts()) as CashAccount[]
 
     // Get FX rates for conversion
     const fxRates: Record<string, number> = {}

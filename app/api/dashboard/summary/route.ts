@@ -9,6 +9,24 @@ import { getFXRate } from '@/lib/utils/currency'
 import { calculatePortfolioMetrics, calculateGoalProgress, calculateDailyChange } from '@/lib/utils/calculations'
 import { getTopPerformers, getWorstPerformers } from '@/lib/utils/calculations'
 
+// Type for asset holdings with currency info
+interface AssetHolding {
+  id: string
+  ticker: string
+  name: string | null
+  security_type: string
+  shares: number
+  purchase_price: number
+  current_price: number | null
+  current_value: number | null
+  cost_basis: number
+  return_percentage: number
+  gain_loss: number
+  currency: string
+  price_currency: string | null
+  updated_at: string
+}
+
 /**
  * GET /api/dashboard/summary
  * Get dashboard overview data
@@ -18,7 +36,7 @@ export async function GET(request: NextRequest) {
     const goalAmount = Number(process.env.GOAL_AMOUNT) || 15000000000
 
     // Get holdings and cash accounts
-    const holdings = await getAssetHoldings()
+    const holdings = (await getAssetHoldings()) as AssetHolding[]
     const cashAccounts = await getCashAccounts()
 
     // Get FX rates for currency conversion
