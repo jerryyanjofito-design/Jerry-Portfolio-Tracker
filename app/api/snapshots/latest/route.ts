@@ -5,19 +5,14 @@ import { calculatePortfolioMetrics, calculateDailyChange } from '@/lib/utils/cal
 
 // Type for asset holdings with currency info
 interface AssetHolding {
+
+// Type for cash accounts
+interface CashAccount {
   id: string
-  ticker: string
-  name: string | null
-  security_type: string
-  shares: number
-  purchase_price: number
-  current_price: number | null
-  current_value: number | null
-  cost_basis: number
-  return_percentage: number
-  gain_loss: number
+  account_name: string
   currency: string
-  price_currency: string | null
+  balance: number
+  created_at: string
   updated_at: string
 }
 
