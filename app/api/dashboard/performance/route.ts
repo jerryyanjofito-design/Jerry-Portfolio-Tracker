@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSnapshots } from '@/lib/supabase/client'
 import { calculatePeriodPerformance } from '@/lib/utils/calculations'
+import type { Snapshot } from '@/types'
 
 /**
  * GET /api/dashboard/performance

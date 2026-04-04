@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getAssets } from '@/lib/supabase/client'
 import { refreshMarketData } from '@/lib/api/market-data'
+import type { Asset } from '@/types'
 
 /**
  * POST /api/market/refresh
@@ -9,7 +10,7 @@ import { refreshMarketData } from '@/lib/api/market-data'
 export async function POST(request: NextRequest) {
   try {
     // Get all assets
-    const assets = await getAssets()
+    const assets = (await getAssets()) as Asset[]
 
     // Extract unique tickers
     const tickers = Array.from(new Set(assets.map(a => a.ticker)))

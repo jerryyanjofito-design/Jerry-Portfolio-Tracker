@@ -8,24 +8,8 @@ import {
 import { getFXRate } from '@/lib/utils/currency'
 import { calculatePortfolioMetrics, calculateGoalProgress, calculateDailyChange } from '@/lib/utils/calculations'
 import { getTopPerformers, getWorstPerformers } from '@/lib/utils/calculations'
+import type { AssetHolding, CashAccount, Snapshot } from '@/types'
 
-// Type for asset holdings with currency info
-interface AssetHolding {
-  id: string
-  ticker: string
-  name: string | null
-  security_type: string
-  shares: number
-  purchase_price: number
-  current_price: number | null
-  current_value: number | null
-  cost_basis: number
-  return_percentage: number
-  gain_loss: number
-  currency: string
-  price_currency: string | null
-  updated_at: string
-}
 
 /**
  * GET /api/dashboard/summary
@@ -37,7 +21,7 @@ export async function GET(request: NextRequest) {
 
     // Get holdings and cash accounts
     const holdings = (await getAssetHoldings()) as AssetHolding[]
-    const cashAccounts = await getCashAccounts()
+    const cashAccounts = (await getCashAccounts()) as CashAccount[]
 
     // Get FX rates for currency conversion
     const fxRates: Record<string, number> = {}
@@ -79,7 +63,7 @@ export async function GET(request: NextRequest) {
     )
 
     // Get latest snapshot for daily change
-    const latestSnapshot = await getLatestSnapshot()
+    const latestSnapshot = (await getLatestSnapshot()) as Snapshot | null
     let dailyChange = 0
     let dailyChangePercentage = 0
 
