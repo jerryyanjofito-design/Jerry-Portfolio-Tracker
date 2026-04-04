@@ -63,7 +63,7 @@ export interface Snapshot {
 // ALLOCATION TYPES
 // ============================================
 
-export interface AllocationBreakdown {
+export type AllocationBreakdown = Record<string, number> & {
   Stocks: number
   ETFs: number
   Crypto: number

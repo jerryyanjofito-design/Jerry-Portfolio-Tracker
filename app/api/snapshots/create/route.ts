@@ -73,11 +73,8 @@ export async function POST(request: NextRequest) {
       total_net_worth: portfolioMetrics.totalNetWorth,
       total_assets_value: portfolioMetrics.totalAssetsValue,
       total_cash_value: portfolioMetrics.totalCashValue,
-      assets_breakdown: portfolioMetrics.allocation,
-      cash_breakdown: {
-        ...portfolioMetrics.allocation,
-        Cash: portfolioMetrics.allocation.Cash,
-      },
+      assets_breakdown: JSON.stringify(portfolioMetrics.allocation),
+      cash_breakdown: JSON.stringify(portfolioMetrics.allocation),
     })
 
     return NextResponse.json(

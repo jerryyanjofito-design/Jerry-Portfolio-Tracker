@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
 
     // Get current portfolio data for comparison
     const holdings = (await getAssetHoldings()) as AssetHolding[]
-    const cashAccounts = await getCashAccounts()
+    const cashAccounts = (await getCashAccounts()) as CashAccount[]
 
     // Get FX rates
     const fxRates: Record<string, number> = {}
