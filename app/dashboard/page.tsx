@@ -66,7 +66,7 @@ export default function DashboardPage() {
         {error && (
           <div className="mb-6 bg-red-50 border border-red-200 p-4 rounded-lg">
             <p className="text-red-600 font-semibold">Dashboard Error</p>
-            <p className="text-sm text-red-700">{error}</p>
+            <p className="text-sm text-red-700">{String(error)}</p>
           </div>
         )}
 
