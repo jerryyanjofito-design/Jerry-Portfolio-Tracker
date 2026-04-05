@@ -40,6 +40,7 @@ export interface CashAccount {
   account_name: string
   currency: string
   balance: number
+  idr_equivalent: number
   created_at: string
   updated_at: string
 }

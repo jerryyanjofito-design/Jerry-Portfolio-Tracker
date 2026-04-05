@@ -5,7 +5,7 @@ import type { MarketPriceData, MarketDataProvider, AlphaVantageQuote } from './t
  * Uses official Alpha Vantage API (free tier: 25 requests/day)
  * Requires API key
  */
-export class AlphaVantageProvider implements MarketProvider {
+export class AlphaVantageProvider implements MarketDataProvider {
   name = 'Alpha Vantage'
   private rateLimited = false
   private requestCount = 0

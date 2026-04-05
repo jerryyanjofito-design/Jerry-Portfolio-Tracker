@@ -58,14 +58,15 @@ export function PerformanceLineChart({
           tick={{ fontSize: 12 }}
         />
         <Tooltip
-          formatter={(value: number) =>
-            new Intl.NumberFormat('id-ID', {
+          formatter={(value) => {
+            const numValue = typeof value === 'number' ? value : Number(value)
+            return new Intl.NumberFormat('id-ID', {
               style: 'currency',
               currency: 'IDR',
               minimumFractionDigits: 0,
               maximumFractionDigits: 0,
-            }).format(value)
-          }
+            }).format(numValue)
+          }}
           labelFormatter={(date) => formatDateShort(date)}
         />
         <Line

@@ -85,8 +85,8 @@ export const snapshotSchema = z.object({
   total_net_worth: z.number().nonnegative('Net worth cannot be negative'),
   total_assets_value: z.number().nonnegative('Assets value cannot be negative'),
   total_cash_value: z.number().nonnegative('Cash value cannot be negative'),
-  assets_breakdown: z.record(z.number()),
-  cash_breakdown: z.record(z.number()),
+  assets_breakdown: z.record(z.string(), z.number()),
+  cash_breakdown: z.record(z.string(), z.number()),
 })
 
 export type SnapshotFormData = z.infer<typeof snapshotSchema>
@@ -108,7 +108,7 @@ export const chatQuerySchema = z.object({
   message: z.string()
     .min(1, 'Message cannot be empty')
     .max(1000, 'Message must be less than 1000 characters'),
-  context: z.record(z.any()).optional(),
+  context: z.record(z.string(), z.any()).optional(),
 })
 
 export type ChatQueryFormData = z.infer<typeof chatQuerySchema>

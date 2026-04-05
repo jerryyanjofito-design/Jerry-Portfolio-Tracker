@@ -96,7 +96,7 @@ export async function GET(request: NextRequest) {
       fxRates
     )
 
-    const chartData = getAllocationChartData(portfolioMetrics.allocation)
+    const chartData = getAllocationChartData(portfolioMetrics.allocation as any)
 
     return NextResponse.json({
       breakdown: portfolioMetrics.allocation,

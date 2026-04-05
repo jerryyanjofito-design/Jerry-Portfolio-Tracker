@@ -5,7 +5,7 @@ import type { MarketPriceData, MarketDataProvider, CoinGeckoPriceData } from './
  * Uses CoinGecko API (free tier: 30 calls/minute)
  * No API key required for free tier
  */
-export class CoinGeckoProvider implements MarketProvider {
+export class CoinGeckoProvider implements MarketDataProvider {
   name = 'CoinGecko'
   private rateLimited = false
   private lastRequestTime = 0

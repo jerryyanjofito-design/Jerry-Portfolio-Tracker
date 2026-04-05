@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSnapshots } from '@/lib/supabase/client'
+import { Snapshot } from '@/types'
 
 /**
  * GET /api/snapshots
@@ -16,8 +17,8 @@ export async function GET(request: NextRequest) {
     // Calculate trend
     let trend = { up: false, down: false }
     if (snapshots.length >= 2) {
-      const first = snapshots[0]
-      const last = snapshots[snapshots.length - 1]
+      const first = snapshots[0] as Snapshot
+      const last = snapshots[snapshots.length - 1] as Snapshot
       trend.up = last.total_net_worth > first.total_net_worth
       trend.down = last.total_net_worth < first.total_net_worth
     }

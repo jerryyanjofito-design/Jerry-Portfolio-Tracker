@@ -62,10 +62,10 @@ export async function getAssetsByType(securityType: string) {
   return data
 }
 
-export async function createAsset(asset: Database['public']['Tables']['assets']['Insert']) {
+export async function createAsset(asset: any) {
   const { data, error } = await supabase
     .from('assets')
-    .insert(asset)
+    .insert(asset as any)
     .select()
     .single()
 
@@ -73,8 +73,8 @@ export async function createAsset(asset: Database['public']['Tables']['assets'][
   return data
 }
 
-export async function updateAsset(id: string, updates: Database['public']['Tables']['assets']['Update']) {
-  const { data, error } = await supabase
+export async function updateAsset(id: string, updates: any) {
+  const { data, error } = await (supabase as any)
     .from('assets')
     .update(updates)
     .eq('id', id)
@@ -130,7 +130,7 @@ export async function getCashAccountById(id: string) {
   return data
 }
 
-export async function createCashAccount(account: Database['public']['Tables']['cash_accounts']['Insert']) {
+export async function createCashAccount(account: any) {
   const { data, error } = await supabase
     .from('cash_accounts')
     .insert(account)
@@ -141,8 +141,8 @@ export async function createCashAccount(account: Database['public']['Tables']['c
   return data
 }
 
-export async function updateCashAccount(id: string, updates: Database['public']['Tables']['cash_accounts']['Update']) {
-  const { data, error } = await supabase
+export async function updateCashAccount(id: string, updates: any) {
+  const { data, error } = await (supabase as any)
     .from('cash_accounts')
     .update(updates)
     .eq('id', id)
@@ -169,7 +169,7 @@ export async function getTotalCashBalance() {
 
   if (error) throw error
 
-  return data.reduce((total, account) => total + Number(account.balance), 0)
+  return (data as any).reduce((total: number, account: any) => total + Number(account.balance), 0)
 }
 
 // ============================================
@@ -208,7 +208,7 @@ export async function getLatestSnapshot() {
   return data
 }
 
-export async function createSnapshot(snapshot: Database['public']['Tables']['snapshots']['Insert']) {
+export async function createSnapshot(snapshot: any) {
   const { data, error } = await supabase
     .from('snapshots')
     .insert(snapshot)
@@ -247,7 +247,7 @@ export async function getLatestDailyAnalysis() {
   return data
 }
 
-export async function createAIAnalysis(analysis: Database['public']['Tables']['ai_analyses']['Insert']) {
+export async function createAIAnalysis(analysis: any) {
   const { data, error } = await supabase
     .from('ai_analyses')
     .insert(analysis)
@@ -303,7 +303,7 @@ export async function getCachedPrices(tickers: string[]) {
   return data
 }
 
-export async function cachePrice(cache: Database['public']['Tables']['market_cache']['Insert']) {
+export async function cachePrice(cache: any) {
   const { data, error } = await supabase
     .from('market_cache')
     .insert(cache)
@@ -317,7 +317,7 @@ export async function cachePrice(cache: Database['public']['Tables']['market_cac
 export async function updateCachedPrice(ticker: string, price: number, currency: string, source: string, expiresAt: string) {
   const now = new Date().toISOString()
 
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('market_cache')
     .upsert({
       ticker,
@@ -352,7 +352,7 @@ export async function deleteExpiredCache() {
 export async function getCachedFXRate(fromCurrency: string, toCurrency: string) {
   const now = new Date().toISOString()
 
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('fx_cache')
     .select('*')
     .eq('from_currency', fromCurrency.toUpperCase())
@@ -363,10 +363,10 @@ export async function getCachedFXRate(fromCurrency: string, toCurrency: string) 
     .single()
 
   if (error && error.code !== 'PGRST116') throw error
-  return data
+  return data as any
 }
 
-export async function cacheFXRate(cache: Database['public']['Tables']['fx_cache']['Insert']) {
+export async function cacheFXRate(cache: any) {
   const { data, error } = await supabase
     .from('fx_cache')
     .insert(cache)
@@ -380,7 +380,7 @@ export async function cacheFXRate(cache: Database['public']['Tables']['fx_cache'
 export async function updateCachedFXRate(fromCurrency: string, toCurrency: string, rate: number, expiresAt: string) {
   const now = new Date().toISOString()
 
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('fx_cache')
     .upsert({
       from_currency: fromCurrency.toUpperCase(),

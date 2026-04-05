@@ -3,34 +3,7 @@ import { generateChatMessage, getSuggestedQuestions } from '@/lib/api/ai'
 import { getAssetHoldings, getCashAccounts, getSnapshots } from '@/lib/supabase/client'
 import { getFXRate } from '@/lib/utils/currency'
 import { calculatePortfolioMetrics, getTopPerformers, getWorstPerformers } from '@/lib/utils/calculations'
-
-// Type for asset holdings with currency info
-interface AssetHolding {
-  id: string
-  ticker: string
-  name: string | null
-  security_type: string
-  shares: number
-  purchase_price: number
-  current_price: number | null
-  current_value: number | null
-  cost_basis: number
-  return_percentage: number
-  gain_loss: number
-  currency: string
-  price_currency: string | null
-  updated_at: string
-}
-
-// Type for cash accounts
-interface CashAccount {
-  id: string
-  account_name: string
-  currency: string
-  balance: number
-  created_at: string
-  updated_at: string
-}
+import type { AssetHolding, CashAccount } from '@/types'
 
 /**
  * POST /api/ai/chat

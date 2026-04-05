@@ -18,7 +18,7 @@ const coinGeckoProvider = new CoinGeckoProvider()
 /**
  * Get the appropriate provider for a security type
  */
-function getProviderForSecurityType(securityType: string): MarketProvider[] {
+function getProviderForSecurityType(securityType: string): MarketDataProvider[] {
   switch (securityType) {
     case 'Crypto':
       return [coinGeckoProvider]
@@ -87,12 +87,13 @@ export async function getMarketPrice(
   if (!forceRefresh) {
     const cached = await getCachedPrice(ticker)
     if (cached) {
+      const cachedData = cached as { price: number; currency: string; cached_at: string; source: string }
       return {
         ticker,
-        price: cached.price,
-        currency: cached.currency,
-        timestamp: cached.cached_at,
-        provider: cached.source,
+        price: cachedData.price,
+        currency: cachedData.currency,
+        timestamp: cachedData.cached_at,
+        provider: cachedData.source,
       }
     }
   }

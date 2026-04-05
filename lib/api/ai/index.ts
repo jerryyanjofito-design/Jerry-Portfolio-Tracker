@@ -163,8 +163,8 @@ export async function getDailyAnalysis(context: DailyAnalysisContext): Promise<s
 
   // Check if cached analysis is from today
   const today = new Date().toISOString().split('T')[0]
-  if (cached && cached.created_at.startsWith(today)) {
-    return cached.response
+  if (cached && (cached as { created_at: string }).created_at.startsWith(today)) {
+    return (cached as { response: string }).response
   }
 
   // Generate new analysis
@@ -213,8 +213,8 @@ export async function generateChatResponse(context: ChatContext): Promise<string
 export async function generateChatMessage(messages: Array<{ role: string; content: string }>, context: ChatContext): Promise<string> {
   // Add system prompt
   const messagesWithSystem = [
-    { role: 'system', content: SYSTEM_PROMPT },
-    ...messages,
+    { role: 'system' as const, content: SYSTEM_PROMPT },
+    ...messages.map(m => ({ role: m.role as 'system' | 'user' | 'assistant', content: m.content })),
   ]
 
   const response = await provider.generateChatMessage(messagesWithSystem)

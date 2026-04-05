@@ -69,6 +69,11 @@ export async function calculatePortfolioMetrics(
     totalGainLoss,
     totalReturnPercentage,
     allocation,
+    assetsBreakdown: {} as Record<string, number>,
+    cashBreakdown: {} as Record<string, number>,
+    allocationBreakdown: {} as Record<string, number>,
+    assetCount: assets.length,
+    cashAccountCount: cashAccounts.length,
   }
 }
 

@@ -32,8 +32,8 @@ export function AllocationPieChart({ data, height = 400 }: AllocationPieChartPro
           cx="50%"
           cy="50%"
           labelLine={false}
-          label={({ category, percentage }) =>
-            `${category}: ${percentage.toFixed(1)}%`
+          label={(entry: any) =>
+            `${entry.category}: ${entry.percentage.toFixed(1)}%`
           }
           outerRadius={120}
           fill="#8884d8"
@@ -44,15 +44,18 @@ export function AllocationPieChart({ data, height = 400 }: AllocationPieChartPro
           ))}
         </Pie>
         <Tooltip
-          formatter={(value: number) => [
-            new Intl.NumberFormat('id-ID', {
-              style: 'currency',
-              currency: 'IDR',
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            }).format(value),
-            'Value',
-          ]}
+          formatter={(value) => {
+            const numValue = typeof value === 'number' ? value : Number(value)
+            return [
+              new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              }).format(numValue),
+              'Value',
+            ]
+          }}
         />
         <Legend />
       </RechartsPieChart>

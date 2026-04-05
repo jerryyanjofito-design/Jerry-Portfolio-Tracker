@@ -2,19 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getLatestSnapshot, getAssetHoldings, getCashAccounts } from '@/lib/supabase/client'
 import { getFXRate } from '@/lib/utils/currency'
 import { calculatePortfolioMetrics, calculateDailyChange } from '@/lib/utils/calculations'
-
-// Type for asset holdings with currency info
-interface AssetHolding {
-
-// Type for cash accounts
-interface CashAccount {
-  id: string
-  account_name: string
-  currency: string
-  balance: number
-  created_at: string
-  updated_at: string
-}
+import { AssetHolding, CashAccount } from '@/types'
 
 /**
  * GET /api/snapshots/latest
@@ -70,7 +58,7 @@ export async function GET(request: NextRequest) {
     // Calculate daily change
     const dailyChange = calculateDailyChange(
       portfolioMetrics.totalNetWorth,
-      latest.total_net_worth
+      (latest as { total_net_worth: number }).total_net_worth
     )
 
     return NextResponse.json({

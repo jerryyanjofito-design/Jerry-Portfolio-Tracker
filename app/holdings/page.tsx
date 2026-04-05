@@ -9,6 +9,7 @@ import { Select } from '@/components/ui/select'
 import { LoadingSpinner } from '@/components/ui/loading'
 import { formatIDR, formatPercentage } from '@/lib/utils/formatting'
 import { Badge } from '@/components/ui/badge'
+import { AssetHolding } from '@/types'
 
 export default function HoldingsPage() {
   const [search, setSearch] = useState('')
@@ -29,7 +30,7 @@ export default function HoldingsPage() {
   const deleteAsset = useDeleteAsset()
 
   // Filter assets by search
-  const filteredAssets = assetsData?.assets?.filter(asset =>
+  const filteredAssets = assetsData?.assets?.filter((asset: AssetHolding) =>
     asset.ticker.toLowerCase().includes(search.toLowerCase()) ||
     (asset.name && asset.name.toLowerCase().includes(search.toLowerCase()))
   ) || []
@@ -96,8 +97,8 @@ export default function HoldingsPage() {
     }
   }
 
-  const getSecurityTypeColor = (type: string) => {
-    const colors: Record<string, string> = {
+  const getSecurityTypeColor = (type: string): 'default' | 'secondary' | 'success' | 'warning' | 'danger' => {
+    const colors: Record<string, 'default' | 'secondary' | 'success' | 'warning' | 'danger'> = {
       Stocks: 'default',
       ETFs: 'secondary',
       Crypto: 'success',
@@ -250,7 +251,7 @@ export default function HoldingsPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    {filteredAssets.map((asset) => (
+                    {filteredAssets.map((asset: AssetHolding) => (
                       <tr key={asset.id} className="hover:bg-gray-50">
                         <td className="px-4 py-4">
                           <div>

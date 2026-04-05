@@ -9,6 +9,7 @@ import { Select } from '@/components/ui/select'
 import { LoadingSpinner } from '@/components/ui/loading'
 import { formatIDR } from '@/lib/utils/formatting'
 import { Badge } from '@/components/ui/badge'
+import { CashAccount } from '@/types'
 
 export default function CashPage() {
   const [showModal, setShowModal] = useState(false)
@@ -157,7 +158,7 @@ export default function CashPage() {
               </div>
             ) : (
               <div className="space-y-4">
-                {cashData.accounts.map((account) => (
+                {cashData.accounts.map((account: CashAccount) => (
                   <div
                     key={account.id}
                     className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
