@@ -2,29 +2,62 @@ import { useQuery, useMutation } from '@tanstack/react-query'
 
 // API fetchers
 const fetchDailyAnalysis = async (forceRefresh: boolean = false) => {
-  const response = await fetch(`/api/ai/daily-analysis${forceRefresh ? '?force_refresh=true' : ''}`)
-  if (!response.ok) throw new Error('Failed to fetch daily analysis')
-  return response.json()
+  try {
+    const response = await fetch(`/api/ai/daily-analysis${forceRefresh ? '?force_refresh=true' : ''}`)
+    if (!response.ok) {
+      if (response.status === 404) {
+        console.warn('Daily analysis endpoint not found (404)')
+        return { error: 'Analysis feature not available', success: false, data: null }
+      }
+      throw new Error('Failed to fetch daily analysis')
+    }
+    return response.json()
+  } catch (error) {
+    console.error('Error fetching daily analysis:', error)
+    return { error: 'Service temporarily unavailable', success: false, data: null }
+  }
 }
 
 const createCustomAnalysisFn = async (data: any) => {
-  const response = await fetch('/api/ai/custom-analysis', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  })
-  if (!response.ok) throw new Error('Failed to generate custom analysis')
-  return response.json()
+  try {
+    const response = await fetch('/api/ai/custom-analysis', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+    if (!response.ok) {
+      if (response.status === 404) {
+        console.warn('Custom analysis endpoint not found (404)')
+        return { error: 'Analysis feature not available', success: false, data: null }
+      }
+      throw new Error('Failed to generate custom analysis')
+    }
+    return response.json()
+  } catch (error) {
+    console.error('Error generating custom analysis:', error)
+    return { error: 'Service temporarily unavailable', success: false, data: null }
+  }
 }
 
 const createChatMessageFn = async (data: any) => {
-  const response = await fetch('/api/ai/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  })
-  if (!response.ok) throw new Error('Failed to generate chat response')
-  return response.json()
+  try {
+    const response = await fetch('/api/ai/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+    if (!response.ok) {
+      if (response.status === 404) {
+        console.warn('Chat endpoint not found (404)')
+        return { error: 'Chat feature not available', success: false, data: null }
+      }
+      throw new Error('Failed to generate chat response')
+    }
+    return response.json()
+  } catch (error) {
+    console.error('Error generating chat response:', error)
+    return { error: 'Service temporarily unavailable', success: false, data: null }
+  }
 }
 
 /**
