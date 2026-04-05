@@ -142,16 +142,26 @@ If you don't have enough information to answer thoroughly, let the user know wha
 export async function generateDailyAnalysis(context: DailyAnalysisContext): Promise<string> {
   const prompt = DAILY_ANALYSIS_PROMPT(context)
 
-  const response = await provider.generateResponse(prompt)
+  try {
+    const response = await provider.generateResponse(prompt)
 
-  // Cache the response
-  await createAIAnalysis({
-    analysis_type: 'daily_summary',
-    context: context as any,
-    response,
-  })
+    // Cache the response
+    await createAIAnalysis({
+      analysis_type: 'daily_summary',
+      context: context as any,
+      response,
+    })
 
-  return response
+    return response
+  } catch (error) {
+    console.error('Error generating daily analysis:', error)
+    // Return a safe fallback response
+    return JSON.stringify({
+      success: false,
+      data: null,
+      error: 'AI analysis temporarily unavailable'
+    })
+  }
 }
 
 /**

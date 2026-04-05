@@ -38,7 +38,12 @@ export class ClaudeProvider implements AIProvider {
       return message.content[0].type === 'text' ? message.content[0].text : ''
     } catch (error) {
       console.error('Error calling Claude API:', error)
-      throw error
+      // Return a safe fallback instead of throwing
+      return JSON.stringify({
+        success: false,
+        data: null,
+        error: 'AI service temporarily unavailable'
+      })
     }
   }
 
@@ -72,7 +77,12 @@ export class ClaudeProvider implements AIProvider {
       return response.content[0].type === 'text' ? response.content[0].text : ''
     } catch (error) {
       console.error('Error calling Claude chat API:', error)
-      throw error
+      // Return a safe fallback instead of throwing
+      return JSON.stringify({
+        success: false,
+        data: null,
+        error: 'AI service temporarily unavailable'
+      })
     }
   }
 
