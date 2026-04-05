@@ -2,8 +2,8 @@
 
 import { useDashboardSummary, useAllocation, usePerformance } from '@/hooks'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { AllocationPieChart } from '@/components/charts/pie-chart'
 import { LineChart } from '@/components/charts/line-chart'
-import { PieChart } from '@/components/charts/pie-chart'
 import { LoadingSpinner } from '@/components/ui/loading'
 
 export default function DashboardPage() {
@@ -110,7 +110,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               {allocationData ? (
-                <PieChart data={allocationData} height={300} />
+                <AllocationPieChart data={allocationData} height={300} />
               ) : (
                 <LoadingSpinner size="md" />
               )}
