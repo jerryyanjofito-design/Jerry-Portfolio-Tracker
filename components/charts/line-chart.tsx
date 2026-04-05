@@ -10,22 +10,21 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from 'recharts'
-import { formatDateShort } from '../../lib/utils/formatting'
 
-interface PerformanceLineChartProps {
+interface LineChartProps {
   data: Array<{ date: string; value: number }>
   height?: number
   showReferenceLine?: boolean
   referenceValue?: number
 }
 
-export function PerformanceLineChart({
+export function LineChart({
   data,
   height = 400,
   showReferenceLine = true,
   referenceValue,
-}: PerformanceLineChartProps) {
-  if (data.length === 0) {
+}: LineChartProps) {
+  if (!data || data.length === 0) {
     return (
       <div className="flex h-[400px] items-center justify-center text-gray-500">
         No performance data available
@@ -34,31 +33,32 @@ export function PerformanceLineChart({
   }
 
   const minValue = Math.min(...data.map((d) => d.value))
-  const maxValue = Math.max(...data.map((d) => d.value))
   const refValue = referenceValue ?? minValue
 
   return (
     <ResponsiveContainer width="100%" height={height}>
       <RechartsLineChart data={data}>
         <CartesianGrid strokeDasharray="3 3" />
+
         <XAxis
           dataKey="date"
-          tickFormatter={(date) => formatDateShort(date)}
           tick={{ fontSize: 12 }}
         />
+
         <YAxis
           tickFormatter={(value) =>
-            new Intl.NumberFormat('en-US', {
+            new Intl.NumberFormat('id-ID', {
               notation: 'compact',
               compactDisplay: 'short',
               style: 'currency',
               currency: 'IDR',
-            }).format(value)
+            }).format(value as number)
           }
           tick={{ fontSize: 12 }}
         />
+
         <Tooltip
-          formatter={(value) => {
+          formatter={(value: any) => {
             const numValue = typeof value === 'number' ? value : Number(value)
             return new Intl.NumberFormat('id-ID', {
               style: 'currency',
@@ -67,8 +67,8 @@ export function PerformanceLineChart({
               maximumFractionDigits: 0,
             }).format(numValue)
           }}
-          labelFormatter={(date) => formatDateShort(date)}
         />
+
         <Line
           type="monotone"
           dataKey="value"
@@ -77,12 +77,12 @@ export function PerformanceLineChart({
           dot={{ r: 3 }}
           activeDot={{ r: 5 }}
         />
+
         {showReferenceLine && (
           <ReferenceLine
             y={refValue}
             stroke="#9CA3AF"
             strokeDasharray="3 3"
-            label={{ value: 'Initial', position: 'right' }}
           />
         )}
       </RechartsLineChart>
