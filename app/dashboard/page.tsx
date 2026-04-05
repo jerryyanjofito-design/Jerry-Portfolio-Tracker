@@ -36,7 +36,9 @@ export default function DashboardPage() {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900">Portfolio Tracker</h1>
           <p className="text-red-600">Unable to load dashboard data. Please try again later.</p>
-          <p className="text-sm text-gray-600">Error: {error}</p>
+          <p className="text-sm text-gray-600">
+            Error: {error instanceof Error ? error.message : 'Unknown error'}
+          </p>
         </div>
       </div>
     )
