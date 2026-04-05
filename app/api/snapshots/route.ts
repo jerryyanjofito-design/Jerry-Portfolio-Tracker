@@ -6,6 +6,8 @@ import { Snapshot } from '@/types'
  * GET /api/snapshots
  * Get historical snapshots
  */
+export const dynamic = 'force-dynamic' // Force dynamic rendering to support request.url usage
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
