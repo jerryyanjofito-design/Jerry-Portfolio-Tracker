@@ -113,7 +113,7 @@ export async function getCashAccounts() {
   const { data, error } = await supabase
     .from('cash_accounts')
     .select('*')
-    .order('account_name', { ascending: true })
+    .order('updated_at', { ascending: false }) // Order by most recent first
 
   if (error) throw error
   return data

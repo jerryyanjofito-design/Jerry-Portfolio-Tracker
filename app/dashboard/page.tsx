@@ -13,11 +13,6 @@ const TEXT_COLORS = {
   muted: '#64748B',
 } as const
 
-const BORDER_COLORS = {
-  DEFAULT: '#E5E7EB',
-  elevated: '#F3F4F6',
-} as const
-
 const CARD_STYLES = {
   elevated: 'bg-white shadow-xl border border-gray-100 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1',
   standard: 'bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-200',
@@ -77,9 +72,9 @@ export default function DashboardPage() {
     )
   }
 
-  const summary = summaryData?.data
-  const allocation = allocationData?.data?.allocation || []
-  const performance = performanceData?.data?.performance || []
+  const summary = summaryData
+  const allocation = allocationData?.data || []
+  const performance = performanceData?.data || []
 
   // Prepare allocation data for chart
   const chartData = allocation.map((item: any) => ({
