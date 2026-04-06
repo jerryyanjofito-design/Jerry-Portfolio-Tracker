@@ -114,14 +114,14 @@ export default function DashboardPage() {
             <CardHeader>
               <CardTitle className={TYPOGRAPHY.label + ' mb-2'}>Total Assets</CardTitle>
               <div className="text-3xl font-bold text-gray-900">
-                {formatCurrency(summary?.total_assets_value || 0)}
+                {formatCurrency(summary?.total_assets || 0)}
               </div>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between text-sm">
                 <span className={TEXT_COLORS.secondary}>Total Value</span>
                 <span className="font-semibold text-green-600">
-                  {summary?.total_change_percent ? formatPercentage(summary.total_change_percent) : '+0.00%'}
+                  {summary?.total_return_percentage ? formatPercentage(summary.total_return_percentage) : '+0.00%'}
                 </span>
               </div>
             </CardContent>
@@ -132,14 +132,14 @@ export default function DashboardPage() {
             <CardHeader>
               <CardTitle className={TYPOGRAPHY.label + ' mb-2'}>Cash Holdings</CardTitle>
               <div className="text-3xl font-bold text-gray-900">
-                {formatCurrency(summary?.cash_holdings || 0)}
+                {formatCurrency(summary?.total_cash || 0)}
               </div>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between text-sm">
                 <span className={TEXT_COLORS.secondary}>Available Liquidity</span>
                 <span className="font-semibold">
-                  {summary?.cash_percentage ? formatPercentage(summary.cash_percentage) : '0.00%'}
+                  {summary?.total_cash && summary?.total_assets ? formatPercentage((summary.total_cash / summary.total_assets) * 100) : '0.00%'}
                 </span>
               </div>
             </CardContent>
@@ -150,14 +150,14 @@ export default function DashboardPage() {
             <CardHeader>
               <CardTitle className={TYPOGRAPHY.label + ' mb-2'}>Investment Portfolio</CardTitle>
               <div className="text-3xl font-bold text-gray-900">
-                {formatCurrency(summary?.portfolio_value || 0)}
+                {formatCurrency((summary?.total_assets || 0) - (summary?.total_cash || 0))}
               </div>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between text-sm">
                 <span className={TEXT_COLORS.secondary}>Invested Value</span>
                 <span className="font-semibold text-blue-600">
-                  {summary?.portfolio_percentage ? formatPercentage(summary.portfolio_percentage) : '0.00%'}
+                  {summary?.total_assets && summary?.total_cash ? formatPercentage(((summary.total_assets - summary.total_cash) / summary.total_assets) * 100) : '0.00%'}
                 </span>
               </div>
             </CardContent>
@@ -210,7 +210,7 @@ export default function DashboardPage() {
                     />
                     <div>
                       <div className={TYPOGRAPHY.h3}>{item.category}</div>
-                      <div className={TYPOGRAPHY.small}>{item.count || 0} holdings</div>
+                      <div className={TYPOGRAPHY.small}>Asset Category</div>
                     </div>
                   </div>
                   <div className="text-right">
