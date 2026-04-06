@@ -118,59 +118,98 @@ export default function HoldingsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-8 py-6">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              Holdings
-            </h1>
-            <p className="text-gray-600 mt-1">
-              Manage your investments and track performance
-            </p>
+    <main className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      {/* Hero Section */}
+      <div className="bg-gradient-to-r from-[#0052D4] to-[#0066FF] text-white py-12 px-6 md:px-12">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+                Holdings
+              </h1>
+              <p className="text-lg text-blue-100 mt-2">
+                Manage your investments and track performance
+              </p>
+            </div>
+            <Button onClick={handleCreate} className="bg-white text-blue-600 hover:bg-blue-50">
+              + Add Asset
+            </Button>
           </div>
-          <Button onClick={handleCreate}>
-            + Add Asset
-          </Button>
         </div>
       </div>
 
-      <div className="px-8 py-6 space-y-6">
-        {/* Summary Card */}
-        <Card>
-          <CardContent className="pt-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <p className="text-sm text-gray-600">Total Assets</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {assetsData?.assets?.length || 0}
-                </p>
+      <div className="max-w-7xl mx-auto px-6 md:px-12 py-8 space-y-8">
+        {/* Summary Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Total Assets Card */}
+          <Card className="bg-white shadow-xl border border-gray-100 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+            <CardContent className="pt-6">
+              <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2">
+                Total Assets
+              </p>
+              <p className="text-3xl font-bold text-gray-900">
+                {formatIDR(assetsData?.summary?.totalValue || 0)}
+              </p>
+              <div className="flex items-center justify-between text-sm mt-2">
+                <span className="text-gray-600">Asset Count</span>
+                <span className="font-semibold text-blue-600">
+                  {assetsData?.assets?.length || 0} holdings
+                </span>
               </div>
-              <div>
-                <p className="text-sm text-gray-600">Total Value</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {formatIDR(assetsData?.summary?.totalValue || 0)}
-                </p>
+            </CardContent>
+          </Card>
+
+          {/* Total Value Card */}
+          <Card className="bg-white shadow-xl border border-gray-100 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+            <CardContent className="pt-6">
+              <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2">
+                Total Value
+              </p>
+              <p className="text-3xl font-bold text-gray-900">
+                {formatIDR(assetsData?.summary?.totalValue || 0)}
+              </p>
+              <div className="flex items-center justify-between text-sm mt-2">
+                <span className="text-gray-600">Market Value</span>
+                <span className="font-semibold">Current</span>
               </div>
-              <div>
-                <p className="text-sm text-gray-600">Total Gain/Loss</p>
-                <p
-                  className={`text-2xl font-bold ${
+            </CardContent>
+          </Card>
+
+          {/* Total Gain/Loss Card */}
+          <Card className="bg-white shadow-xl border border-gray-100 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+            <CardContent className="pt-6">
+              <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2">
+                Total Gain/Loss
+              </p>
+              <p
+                className={`text-3xl font-bold ${
+                  (assetsData?.summary?.totalGainLoss || 0) >= 0
+                    ? 'text-green-600'
+                    : 'text-red-600'
+                }`}
+              >
+                {formatIDR(assetsData?.summary?.totalGainLoss || 0)}
+              </p>
+              <div className="flex items-center justify-between text-sm mt-2">
+                <span className="text-gray-600">Return</span>
+                <span
+                  className={`font-semibold ${
                     (assetsData?.summary?.totalGainLoss || 0) >= 0
                       ? 'text-green-600'
                       : 'text-red-600'
                   }`}
                 >
-                  {formatIDR(assetsData?.summary?.totalGainLoss || 0)}
-                </p>
+                  {formatPercentage(
+                    (assetsData?.summary?.totalGainLoss || 0) / (assetsData?.summary?.totalValue || 1) * 100
+                  )}
+                </span>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Filters */}
-        <Card>
+        <Card className="bg-white/80 backdrop-blur-xl border border-white/20 shadow-xl rounded-2xl">
           <CardContent className="pt-6">
             <div className="flex flex-wrap gap-4">
               <div className="flex-1 min-w-[200px]">
@@ -178,6 +217,7 @@ export default function HoldingsPage() {
                   placeholder="Search by ticker or name..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
+                  className="bg-white border-gray-200 focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -218,7 +258,7 @@ export default function HoldingsPage() {
         </Card>
 
         {/* Assets Table */}
-        <Card>
+        <Card className="bg-white/80 backdrop-blur-xl border border-white/20 shadow-xl rounded-2xl">
           <CardContent className="pt-0">
             {filteredAssets.length === 0 ? (
               <div className="text-center py-12 text-gray-500">
@@ -229,12 +269,12 @@ export default function HoldingsPage() {
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-50 border-b border-gray-200">
+                  <thead className="bg-gradient-to-r from-blue-50 to-gray-50 border-b border-gray-200">
                     <tr>
                       {sortOptions.map(option => (
                         <th
                           key={option.value}
-                          className="px-4 py-3 text-left text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-100"
+                          className="px-4 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer hover:bg-blue-100 transition-colors"
                           onClick={() => handleSort(option.value)}
                         >
                           {option.label}
@@ -245,23 +285,23 @@ export default function HoldingsPage() {
                           )}
                         </th>
                       ))}
-                      <th className="px-4 py-3 text-right text-sm font-medium text-gray-700">
+                      <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">
                         Actions
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-200">
+                  <tbody className="divide-y divide-gray-100">
                     {filteredAssets.map((asset: AssetHolding) => (
-                      <tr key={asset.id} className="hover:bg-gray-50">
+                      <tr key={asset.id} className="hover:bg-gray-50 transition-colors">
                         <td className="px-4 py-4">
                           <div>
-                            <p className="font-medium text-gray-900">
+                            <p className="font-bold text-gray-900">
                               {asset.ticker}
                             </p>
                           </div>
                         </td>
                         <td className="px-4 py-4">
-                          <p className="text-gray-600">{asset.name || 'N/A'}</p>
+                          <p className="text-gray-600 font-medium">{asset.name || 'N/A'}</p>
                         </td>
                         <td className="px-4 py-4">
                           <Badge variant={getSecurityTypeColor(asset.security_type)}>
@@ -269,13 +309,13 @@ export default function HoldingsPage() {
                           </Badge>
                         </td>
                         <td className="px-4 py-4">
-                          <p className="font-medium text-gray-900">
+                          <p className="font-bold text-gray-900">
                             {formatIDR(asset.current_value || 0)}
                           </p>
                         </td>
                         <td className="px-4 py-4">
                           <p
-                            className={`font-medium ${
+                            className={`font-bold ${
                               asset.return_percentage >= 0
                                 ? 'text-green-600'
                                 : 'text-red-600'
@@ -290,6 +330,7 @@ export default function HoldingsPage() {
                               size="sm"
                               variant="outline"
                               onClick={() => handleEdit(asset)}
+                              className="hover:bg-blue-50 hover:text-blue-600 hover:border-blue-600"
                             >
                               Edit
                             </Button>

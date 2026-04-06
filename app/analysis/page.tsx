@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { LoadingSpinner } from '@/components/ui/loading'
 import { Badge } from '@/components/ui/badge'
+import { formatIDR, formatPercentage } from '@/lib/utils/formatting'
 
 export default function AnalysisPage() {
   const [activeTab, setActiveTab] = useState<'chat' | 'custom' | 'daily'>('chat')
@@ -74,45 +75,99 @@ export default function AnalysisPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-8 py-6">
-        <h1 className="text-3xl font-bold text-gray-900">
-          AI Analysis
-        </h1>
-        <p className="text-gray-600 mt-1">
-          Get intelligent insights about your portfolio
-        </p>
+    <main className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      {/* Hero Section */}
+      <div className="bg-gradient-to-r from-[#0052D4] to-[#0066FF] text-white py-12 px-6 md:px-12">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+            AI Analysis
+          </h1>
+          <p className="text-lg text-blue-100 mt-2">
+            Get intelligent insights about your portfolio
+          </p>
+        </div>
       </div>
 
-      <div className="px-8 py-6 space-y-6">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 py-8 space-y-8">
+        {/* Summary Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Total Assets Card */}
+          <Card className="bg-white shadow-xl border border-gray-100 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+            <CardContent className="pt-6">
+              <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2">
+                Total Assets
+              </p>
+              <p className="text-3xl font-bold text-gray-900">
+                {formatIDR(assets?.summary?.totalValue || 0)}
+              </p>
+              <div className="flex items-center justify-between text-sm mt-2">
+                <span className="text-gray-600">Asset Count</span>
+                <span className="font-semibold text-blue-600">
+                  {assets?.assets?.length || 0} holdings
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Total Gain/Loss Card */}
+          <Card className="bg-white shadow-xl border border-gray-100 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+            <CardContent className="pt-6">
+              <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2">
+                Total Gain/Loss
+              </p>
+              <p
+                className={`text-3xl font-bold ${
+                  (assets?.summary?.totalGainLoss || 0) >= 0
+                    ? 'text-green-600'
+                    : 'text-red-600'
+                }`}
+              >
+                {formatIDR(assets?.summary?.totalGainLoss || 0)}
+              </p>
+              <div className="flex items-center justify-between text-sm mt-2">
+                <span className="text-gray-600">Return</span>
+                <span
+                  className={`font-semibold ${
+                    (assets?.summary?.totalGainLoss || 0) >= 0
+                      ? 'text-green-600'
+                      : 'text-red-600'
+                  }`}
+                >
+                  {formatPercentage(
+                    (assets?.summary?.totalGainLoss || 0) / (assets?.summary?.totalValue || 1) * 100
+                  )}
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
         {/* Tab Navigation */}
-        <div className="flex border-b border-gray-200">
+        <div className="bg-white/80 backdrop-blur-xl border border-white/20 shadow-xl rounded-2xl p-2 flex gap-2">
           <button
-            className={`px-6 py-3 font-medium border-b-2 transition-colors ${
+            className={`flex-1 px-6 py-3 font-semibold rounded-xl transition-all duration-200 ${
               activeTab === 'chat'
-                ? 'border-blue-600 text-blue-600'
-                : 'border-transparent text-gray-600 hover:text-gray-900'
+                ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
             }`}
             onClick={() => setActiveTab('chat')}
           >
             Chat Assistant
           </button>
           <button
-            className={`px-6 py-3 font-medium border-b-2 transition-colors ${
+            className={`flex-1 px-6 py-3 font-semibold rounded-xl transition-all duration-200 ${
               activeTab === 'custom'
-                ? 'border-blue-600 text-blue-600'
-                : 'border-transparent text-gray-600 hover:text-gray-900'
+                ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
             }`}
             onClick={() => setActiveTab('custom')}
           >
             Custom Analysis
           </button>
           <button
-            className={`px-6 py-3 font-medium border-b-2 transition-colors ${
+            className={`flex-1 px-6 py-3 font-semibold rounded-xl transition-all duration-200 ${
               activeTab === 'daily'
-                ? 'border-blue-600 text-blue-600'
-                : 'border-transparent text-gray-600 hover:text-gray-900'
+                ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
             }`}
             onClick={() => setActiveTab('daily')}
           >
@@ -122,15 +177,15 @@ export default function AnalysisPage() {
 
         {/* Chat Assistant Tab */}
         {activeTab === 'chat' && (
-          <Card>
+          <Card className="bg-white/80 backdrop-blur-xl border border-white/20 shadow-xl rounded-2xl">
             <CardHeader>
-              <CardTitle className="text-lg text-gray-700">
+              <CardTitle className="text-xl font-bold text-gray-900">
                 Chat with AI Assistant
               </CardTitle>
             </CardHeader>
             <CardContent>
               {/* Chat Messages */}
-              <div className="space-y-4 max-h-[500px] overflow-y-auto mb-4 p-4 bg-gray-50 rounded-lg">
+              <div className="space-y-4 max-h-[500px] overflow-y-auto mb-4 p-4 bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200">
                 {chatMessages.map((message, index) => (
                   <div
                     key={index}
@@ -139,10 +194,10 @@ export default function AnalysisPage() {
                     }`}
                   >
                     <div
-                      className={`max-w-[80%] p-3 rounded-lg ${
+                      className={`max-w-[80%] p-3 rounded-xl ${
                         message.role === 'user'
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-white text-gray-900 border border-gray-200'
+                          ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg'
+                          : 'bg-white text-gray-900 border border-gray-200 shadow-md'
                       }`}
                     >
                       {message.role === 'system' ? (
@@ -155,7 +210,7 @@ export default function AnalysisPage() {
                 ))}
                 {chatMessage.isPending && (
                   <div className="flex justify-start">
-                    <div className="p-3 rounded-lg bg-gray-200">
+                    <div className="p-3 rounded-xl bg-gray-200">
                       <LoadingSpinner size="sm" />
                     </div>
                   </div>
@@ -168,22 +223,22 @@ export default function AnalysisPage() {
                   placeholder="Ask about your portfolio..."
                   value={chatInput}
                   onChange={(e) => setChatInput(e.target.value)}
-                  className="flex-1"
+                  className="flex-1 bg-white border-gray-200 focus:ring-2 focus:ring-blue-500"
                 />
-                <Button type="submit" disabled={chatMessage.isPending || !chatInput.trim()}>
+                <Button type="submit" disabled={chatMessage.isPending || !chatInput.trim()} className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600">
                   Send
                 </Button>
               </form>
 
               {/* Suggested Questions */}
               <div className="mt-4">
-                <p className="text-sm text-gray-600 mb-2">Try asking:</p>
+                <p className="text-sm text-gray-600 mb-2 font-semibold">Try asking:</p>
                 <div className="flex flex-wrap gap-2">
                   {['How is my diversification?', 'What should I rebalance?', 'Why is my portfolio down today?'].map((question) => (
                     <button
                       key={question}
                       onClick={() => setChatInput(question)}
-                      className="px-3 py-1 text-sm bg-blue-50 text-blue-700 rounded-full hover:bg-blue-100"
+                      className="px-3 py-1 text-sm bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 rounded-full hover:from-blue-100 hover:to-blue-200 transition-all duration-200 border border-blue-200"
                     >
                       {question}
                     </button>
@@ -196,32 +251,32 @@ export default function AnalysisPage() {
 
         {/* Custom Analysis Tab */}
         {activeTab === 'custom' && (
-          <Card>
+          <Card className="bg-white/80 backdrop-blur-xl border border-white/20 shadow-xl rounded-2xl">
             <CardHeader>
-              <CardTitle className="text-lg text-gray-700">
+              <CardTitle className="text-xl font-bold text-gray-900">
                 Custom Analysis
               </CardTitle>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleCustomAnalysis} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Select Assets (Optional)
                   </label>
                   {assets && assets.assets.length > 0 ? (
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-[200px] overflow-y-auto p-2 bg-gray-50 rounded-lg">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-[200px] overflow-y-auto p-2 bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200">
                       {assets.assets.slice(0, 12).map((asset: any) => (
                         <button
                           key={asset.id}
                           type="button"
                           onClick={() => toggleAssetSelection(asset.ticker)}
-                          className={`p-2 text-left text-sm rounded transition-colors ${
+                          className={`p-2 text-left text-sm rounded-lg transition-all duration-200 ${
                             selectedAssets.includes(asset.ticker)
-                              ? 'bg-blue-100 border-2 border-blue-600'
-                              : 'bg-white border border-gray-200 hover:bg-gray-50'
+                              ? 'bg-gradient-to-r from-blue-100 to-blue-200 border-2 border-blue-600 shadow-md'
+                              : 'bg-white border border-gray-200 hover:bg-gray-50 hover:border-blue-300'
                           }`}
                         >
-                          <div className="font-medium">{asset.ticker}</div>
+                          <div className="font-bold">{asset.ticker}</div>
                           <div className="text-xs text-gray-600">{asset.name || 'N/A'}</div>
                         </button>
                       ))}
@@ -234,7 +289,7 @@ export default function AnalysisPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="question" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="question" className="block text-sm font-semibold text-gray-700 mb-2">
                     Your Question *
                   </label>
                   <textarea
@@ -242,20 +297,20 @@ export default function AnalysisPage() {
                     value={customQuestion}
                     onChange={(e) => setCustomQuestion(e.target.value)}
                     placeholder="Ask a specific question about your portfolio or selected assets..."
-                    className="w-full min-h-[120px] px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full min-h-[120px] px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     required
                   />
                 </div>
 
                 <div className="flex justify-end">
-                  <Button type="submit" disabled={customAnalysis.isPending || !customQuestion.trim()}>
+                  <Button type="submit" disabled={customAnalysis.isPending || !customQuestion.trim()} className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600">
                     {customAnalysis.isPending ? 'Analyzing...' : 'Get Analysis'}
                   </Button>
                 </div>
 
                 {customAnalysis.data && (
-                  <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                    <h4 className="font-semibold text-gray-900 mb-2">Analysis Result:</h4>
+                  <div className="mt-4 p-4 bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-300 rounded-xl shadow-md">
+                    <h4 className="font-bold text-gray-900 mb-2">Analysis Result:</h4>
                     <div className="prose prose-sm max-w-none text-gray-700">
                       {customAnalysis.data.analysis}
                     </div>
@@ -268,10 +323,10 @@ export default function AnalysisPage() {
 
         {/* Daily Analysis Tab */}
         {activeTab === 'daily' && (
-          <Card>
+          <Card className="bg-white/80 backdrop-blur-xl border border-white/20 shadow-xl rounded-2xl">
             <CardHeader>
               <div className="flex justify-between items-center">
-                <CardTitle className="text-lg text-gray-700">
+                <CardTitle className="text-xl font-bold text-gray-900">
                   Daily AI Analysis
                 </CardTitle>
                 <Button
@@ -279,6 +334,7 @@ export default function AnalysisPage() {
                   variant="outline"
                   onClick={handleRefreshDaily}
                   disabled={dailyLoading}
+                  className="hover:bg-blue-50 hover:text-blue-600 hover:border-blue-600"
                 >
                   {dailyLoading ? 'Refreshing...' : 'Refresh'}
                 </Button>
@@ -294,16 +350,16 @@ export default function AnalysisPage() {
                   <div className="whitespace-pre-wrap">{dailyAnalysis.analysis}</div>
                   {dailyAnalysis.insights && (
                     <div className="mt-6 pt-6 border-t border-gray-200">
-                      <h4 className="font-semibold text-gray-900 mb-3">Key Insights:</h4>
+                      <h4 className="font-bold text-gray-900 mb-3">Key Insights:</h4>
                       <div className="space-y-2">
                         {dailyAnalysis.insights.topPerformers && dailyAnalysis.insights.topPerformers.length > 0 && (
                           <div>
-                            <Badge variant="success" className="mb-1">Top Performers</Badge>
+                            <Badge variant="success" className="mb-1 font-semibold">Top Performers</Badge>
                             <div className="text-sm">
                               {dailyAnalysis.insights.topPerformers.map((p: any) => (
-                                <div key={p.ticker} className="flex justify-between">
-                                  <span>{p.ticker} ({p.name || 'N/A'})</span>
-                                  <span className="font-medium">+{p.returnPercentage.toFixed(2)}%</span>
+                                <div key={p.ticker} className="flex justify-between p-2 bg-green-50 rounded-lg">
+                                  <span className="font-medium">{p.ticker} ({p.name || 'N/A'})</span>
+                                  <span className="font-bold text-green-600">+{p.returnPercentage.toFixed(2)}%</span>
                                 </div>
                               ))}
                             </div>
@@ -311,12 +367,12 @@ export default function AnalysisPage() {
                         )}
                         {dailyAnalysis.insights.worstPerformers && dailyAnalysis.insights.worstPerformers.length > 0 && (
                           <div>
-                            <Badge variant="danger" className="mb-1">Areas of Concern</Badge>
+                            <Badge variant="danger" className="mb-1 font-semibold">Areas of Concern</Badge>
                             <div className="text-sm">
                               {dailyAnalysis.insights.worstPerformers.map((p: any) => (
-                                <div key={p.ticker} className="flex justify-between">
-                                  <span>{p.ticker} ({p.name || 'N/A'})</span>
-                                  <span className="font-medium">{p.returnPercentage.toFixed(2)}%</span>
+                                <div key={p.ticker} className="flex justify-between p-2 bg-red-50 rounded-lg">
+                                  <span className="font-medium">{p.ticker} ({p.name || 'N/A'})</span>
+                                  <span className="font-bold text-red-600">{p.returnPercentage.toFixed(2)}%</span>
                                 </div>
                               ))}
                             </div>
@@ -325,7 +381,7 @@ export default function AnalysisPage() {
                       </div>
                     </div>
                   )}
-                  <div className="mt-4 text-sm text-gray-500">
+                  <div className="mt-4 text-sm text-gray-500 font-medium">
                     Generated at: {new Date(dailyAnalysis.generated_at).toLocaleString()}
                   </div>
                 </div>

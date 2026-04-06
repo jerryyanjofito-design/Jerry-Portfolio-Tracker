@@ -75,66 +75,85 @@ export default function CashPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-8 py-6">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              Cash Accounts
-            </h1>
-            <p className="text-gray-600 mt-1">
-              Manage your cash holdings across different currencies
-            </p>
+    <main className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      {/* Hero Section */}
+      <div className="bg-gradient-to-r from-[#0052D4] to-[#0066FF] text-white py-12 px-6 md:px-12">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+                Cash Accounts
+              </h1>
+              <p className="text-lg text-blue-100 mt-2">
+                Manage your cash holdings across different currencies
+              </p>
+            </div>
+            <Button onClick={handleCreate} className="bg-white text-blue-600 hover:bg-blue-50">
+              + Add Cash Account
+            </Button>
           </div>
-          <Button onClick={handleCreate}>
-            + Add Cash Account
-          </Button>
         </div>
       </div>
 
-      <div className="px-8 py-6 space-y-6">
-        {/* Summary Card */}
-        <Card>
-          <CardContent className="pt-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-gray-600">Total Cash Accounts</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {cashData?.accounts?.length || 0}
-                </p>
+      <div className="max-w-7xl mx-auto px-6 md:px-12 py-8 space-y-8">
+        {/* Summary Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Total Cash Holdings Card */}
+          <Card className="bg-white shadow-xl border border-gray-100 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+            <CardContent className="pt-6">
+              <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2">
+                Total Cash Holdings
+              </p>
+              <p className="text-3xl font-bold text-gray-900">
+                {formatIDR(cashData?.total_idr || 0)}
+              </p>
+              <div className="flex items-center justify-between text-sm mt-2">
+                <span className="text-gray-600">Cash Accounts</span>
+                <span className="font-semibold text-blue-600">
+                  {cashData?.accounts?.length || 0} accounts
+                </span>
               </div>
-              <div>
-                <p className="text-sm text-gray-600">Total Value (IDR)</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {formatIDR(cashData?.total_idr || 0)}
-                </p>
+            </CardContent>
+          </Card>
+
+          {/* Total Value (IDR) Card */}
+          <Card className="bg-white shadow-xl border border-gray-100 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+            <CardContent className="pt-6">
+              <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2">
+                Total Value (IDR)
+              </p>
+              <p className="text-3xl font-bold text-gray-900">
+                {formatIDR(cashData?.total_idr || 0)}
+              </p>
+              <div className="flex items-center justify-between text-sm mt-2">
+                <span className="text-gray-600">Available Liquidity</span>
+                <span className="font-semibold text-green-600">100%</span>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Currency Breakdown */}
         {cashData?.breakdown_by_currency && Object.keys(cashData.breakdown_by_currency).length > 0 && (
-          <Card>
+          <Card className="bg-white/80 backdrop-blur-xl border border-white/20 shadow-xl rounded-2xl">
             <CardHeader>
-              <CardTitle className="text-lg text-gray-700">
+              <CardTitle className="text-xl font-bold text-gray-900">
                 Currency Breakdown
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {Object.entries(cashData.breakdown_by_currency).map(([currency, data]: [string, any]) => (
-                  <div key={currency} className="p-4 bg-gray-50 rounded-lg">
+                  <div key={currency} className="p-4 bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 hover:border-blue-300 transition-all duration-200 hover:shadow-md">
                     <div className="flex items-center justify-between mb-2">
-                      <Badge variant={getCurrencyColor(currency)}>
+                      <Badge variant={getCurrencyColor(currency)} className="font-semibold">
                         {currency}
                       </Badge>
                     </div>
                     <p className="text-lg font-bold text-gray-900">
                       {formatIDR(data.idr_equivalent)}
                     </p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 font-medium">
                       {data.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                     </p>
                   </div>
@@ -145,9 +164,9 @@ export default function CashPage() {
         )}
 
         {/* Cash Accounts List */}
-        <Card>
+        <Card className="bg-white/80 backdrop-blur-xl border border-white/20 shadow-xl rounded-2xl">
           <CardHeader>
-            <CardTitle className="text-lg text-gray-700">
+            <CardTitle className="text-xl font-bold text-gray-900">
               Cash Accounts
             </CardTitle>
           </CardHeader>
@@ -161,18 +180,18 @@ export default function CashPage() {
                 {cashData.accounts.map((account: CashAccount) => (
                   <div
                     key={account.id}
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                    className="flex items-center justify-between p-4 bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 hover:border-blue-300 transition-all duration-200 hover:shadow-md"
                   >
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-semibold text-gray-900">
+                        <h3 className="font-bold text-gray-900">
                           {account.account_name}
                         </h3>
-                        <Badge variant={getCurrencyColor(account.currency)}>
+                        <Badge variant={getCurrencyColor(account.currency)} className="font-semibold">
                           {account.currency}
                         </Badge>
                       </div>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-gray-700 font-medium">
                         {formatIDR(account.balance)}
                       </p>
                       <p className="text-xs text-gray-500">
@@ -184,6 +203,7 @@ export default function CashPage() {
                         size="sm"
                         variant="outline"
                         onClick={() => handleEdit(account)}
+                        className="hover:bg-blue-50 hover:text-blue-600 hover:border-blue-600"
                       >
                         Edit
                       </Button>
@@ -204,9 +224,9 @@ export default function CashPage() {
 
         {/* Cash Account Modal */}
         {showModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
-              <div className="p-6 border-b border-gray-200">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 border border-gray-200">
+              <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white rounded-t-2xl">
                 <h2 className="text-2xl font-bold text-gray-900">
                   {editingAccount ? 'Edit Cash Account' : 'Add Cash Account'}
                 </h2>
