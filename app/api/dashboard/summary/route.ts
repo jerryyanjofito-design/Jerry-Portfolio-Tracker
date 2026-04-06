@@ -23,6 +23,10 @@ export async function GET(request: NextRequest) {
     const holdings = (await getAssetHoldings()) as AssetHolding[]
     const cashAccounts = (await getCashAccounts()) as CashAccount[]
 
+    // Debug: Log data counts
+    console.log('Dashboard Summary - Holdings:', holdings.length)
+    console.log('Dashboard Summary - Cash Accounts:', cashAccounts.length)
+
     // Get FX rates for currency conversion
     const fxRates: Record<string, number> = {}
 
@@ -55,6 +59,14 @@ export async function GET(request: NextRequest) {
       cashAccounts,
       fxRates
     )
+
+    // Debug: Log calculated values
+    console.log('Portfolio Metrics:', portfolioMetrics)
+    console.log('Total Assets Value:', portfolioMetrics.totalAssetsValue)
+    console.log('Total Cash Value:', portfolioMetrics.totalCashValue)
+    console.log('Total Net Worth:', portfolioMetrics.totalNetWorth)
+    console.log('Holdings Count:', holdings.length)
+    console.log('Holdings Data:', JSON.stringify(holdings, null, 2))
 
     // Calculate goal progress
     const goalProgress = calculateGoalProgress(

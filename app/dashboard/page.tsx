@@ -145,14 +145,14 @@ export default function DashboardPage() {
             <CardHeader>
               <CardTitle className={TYPOGRAPHY.label + ' mb-2'}>Investment Portfolio</CardTitle>
               <div className="text-3xl font-bold text-gray-900">
-                {formatCurrency((summary?.total_assets || 0) - (summary?.total_cash || 0))}
+                {formatCurrency(summary?.total_cash ? summary.total_cash : 0)}
               </div>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between text-sm">
                 <span className={TEXT_COLORS.secondary}>Invested Value</span>
                 <span className="font-semibold text-blue-600">
-                  {summary?.total_assets && summary?.total_cash ? formatPercentage(((summary.total_assets - summary.total_cash) / summary.total_assets) * 100) : '0.00%'}
+                  {summary?.total_cash ? formatPercentage((summary.total_cash / summary.total_cash) * 100) : '0.00%'}
                 </span>
               </div>
             </CardContent>
